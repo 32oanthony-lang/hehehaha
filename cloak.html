@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Drive Workspace</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #202124;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        .box {
+            background: white;
+            border: 1px solid #dadce0;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 24px;
+            color: #1a73e8;
+            margin-top: 0;
+        }
+        p {
+            font-size: 14px;
+            color: #5f6368;
+            line-height: 1.5;
+        }
+        .cloak-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+            margin-top: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .cloak-btn:hover {
+            background: #1557b0;
+        }
+        .input-group {
+            margin-top: 15px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: #5f6368;
+            margin-bottom: 5px;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background: white;
+        }
+        .input-group input:focus, .input-group select:focus {
+            border-color: #1a73e8;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://w3.org" style="margin-bottom: 15px;">
+            <path d="M26 4H10C7.79 4 6 5.79 6 8V40C6 42.21 7.79 44 10 44H38C40.21 44 42 42.21 42 40V20L26 4Z" fill="#2684FC"/>
+            <path d="M26 4V20H42L26 4Z" fill="#A1C2FA"/>
+            <path d="M14 24H34V28H14V24ZM14 32H34V36H14V32ZM14 16H22V20H14V16Z" fill="white"/>
+        </svg>
+        <h1>Google Docs Asset Downloader</h1>
+        <p>Your educational files are ready for compression processing. Click below to initialize the cloud terminal container.</p>
+
+        <!-- Preset Selector Dropdown -->
+        <div class="input-group">
+            <label for="presetSelect">Quick Mask Presets:</label>
+            <select id="presetSelect" onchange="applyPreset()">
+                <option value="docs" data-title="Google Docs - Edit Document" data-domain="://google.com">Google Docs</option>
+                <option value="classroom" data-title="Home" data-domain="://google.com">Google Classroom</option>
+                <option value="drive" data-title="My Drive - Google Drive" data-domain="://google.com">Google Drive</option>
+                <option value="canvas" data-title="Dashboard" data-domain="instructure.com">Canvas LMS</option>
+                <option value="custom" data-title="My Custom Site" data-domain="wikipedia.org">Custom Profile...</option>
+            </select>
+        </div>
+
+        <!-- Input 1: The Tab Title -->
+        <div class="input-group">
+            <label for="titleInput">Fake Tab Title:</label>
+            <input type="text" id="titleInput" value="Google Docs - Edit Document" placeholder="e.g., Google Classroom">
+        </div>
+
+        <!-- Input 2: Domain to Steal Logo From -->
+        <div class="input-group">
+            <label for="logoDomainInput">Fetch Logo From This Domain Name:</label>
+            <input type="text" id="logoDomainInput" value="://google.com" placeholder="e.g., ://google.com">
+        </div>
+
+        <!-- Input 3: The Destination Hidden Game URL -->
+        <div class="input-group">
+            <label for="urlInput">Target Hidden Website URL:</label>
+            <input type="text" id="urlInput" value="https://blooket.com.se" placeholder="Enter target URL...">
+        </div>
+
+        <button class="cloak-btn" onclick="launchCloakedTab()">Initialize Terminal</button>
+    </div>
+
+    <script>
+        // Automatic preset fill helper function
+        function applyPreset() {
+            const select = document.getElementById('presetSelect');
+            const selectedOption = select.options[select.selectedIndex];
+            if (selectedOption.value !== 'custom') {
+                document.getElementById('titleInput').value = selectedOption.getAttribute('data-title');
+                document.getElementById('logoDomainInput').value = selectedOption.getAttribute('data-domain');
+            }
+        }
+
+        function launchCloakedTab() {
+            // Grab values from input fields
+            const gameNode = document.getElementById('urlInput').value;
+            const customTitle = document.getElementById('titleInput').value;
+            const targetDomain = document.getElementById('logoDomainInput').value;
+
+            // FIXED: Fixed template string structure and verified favicon retrieval endpoint
+            const dynamicFavicon = `https://google.com{targetDomain}&sz=64`;
+
+            // Complete source template generating the false identity headers
+            const cloakedHtml = `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>${customTitle}</title>
+                <link rel="icon" type="image/png" href="${dynamicFavicon}">
+                <style>
+                    body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; background: #000; }
+                    iframe { width: 100%; height: 100%; border: none; display: block; }
+                </style>
+            </head>
+            <body>
+                <iframe src="${gameNode}" allow="autoplay; fullscreen; keyboard"></iframe>
+            </body>
+            </html>`;
+
+            // Encode HTML safely directly into browser execution string
+            const blob = new Blob([cloakedHtml], { type: 'text/html' });
+            const finalUrl = URL.createObjectURL(blob);
+
+            // Open window using safe blob pointer referencing the DOM data directly
+            const win = window.open();
+            if (win) {
+                win.location.href = finalUrl;
+                
+                // FIXED: Modifies url text path instantly post-initialization if domain policy permits
+                try {
+                    win.history.pushState({}, "", "/document/d/1edit-workspace");
+                } catch(e) {
+                    console.log("History masking skipped due to browser sandboxing regulations.");
+                }
+            } else {
+                alert('Pop-up blocked! Please enable popups for this to work.');
+            }
+        }
+    </script>
+</body>
+</html>
